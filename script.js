@@ -8,7 +8,9 @@ auth.onAuthStateChanged(function (user) {
   if (!user) {
     window.location.href = "login.html";
     return;
-  }
+  } else {
+  chatBox.style.display = "block";
+}
   document.getElementById('userGreeting').textContent = "Hi, " + (user.displayName || user.email) + " · ";
   loadHistory(user.uid);
   button.disabled = false;
