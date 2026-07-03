@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - BenChat AI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Create Account</h1>
+
+<p>Join BenChat AI Today</p>
+
+<form id="signupForm">
+
+<input type="text" id="signupName" placeholder="Full Name" required>
+
+<br><br>
+
+<input type="email" id="signupEmail" placeholder="Email Address" required>
+
+<br><br>
+
+<input type="password" id="signupPassword" placeholder="Password" required>
+
+<br><br>
+
+<input type="password" id="signupConfirm" placeholder="Confirm Password" required>
+
+<br><br>
+
+<button type="submit" id="signupBtn">Create Account</button>
+
+</form>
+
+<p id="signupNote" class="note"></p>
+
+<br>
+
+<p>
+Already have an account?
+<a href="login.html">Login</a>
+</p>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+document.getElementById('signupForm').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const note = document.getElementById('signupNote');
+  const btn = document.getElementById('signupBtn');
+  note.textContent = '';
+  btn.disabled = true;
+  btn.textContent = 'Creating account...';
+
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const password = document.getElementById('signupPassword').value;
+  const confirm = document.getElementById('signupConfirm').value;
+
+  if (password !== confirm) {
+    note.textContent = "Passwords don't match.";
+    btn.disabled = false;
+    btn.textContent = 'Create Account';
+    return;
+  }
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then(function (cred) {
+      return cred.user.updateProfile({ displayName: name }).then(function () {
+        return db.collection('users').doc(cred.user.uid).set({
+          displayName: name,
+          email: email,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      });
+    })
+    .then(function () {
+      window.location.href = "chat.html";
+    })
+    .catch(function (err) {
+      note.textContent = err.message;
+      btn.disabled = false;
+      btn.textContent = 'Create Account';
+    });
+});
+</script>
+
+</body>
+</html>
