@@ -106,7 +106,7 @@ button.onclick = async function () {
 /* =========================================================
    AI REPLY ENGINE - powered by Groq (free tier, OpenAI-compatible)
    ========================================================= */
-const GROQ_API_KEY = "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";
+const GROQ_API_KEY = "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";
 const GROQ_MODEL = "llama-3.3-70b-versatile";
 
 async function generateReply(userText, uid) {
